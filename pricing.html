@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing - AI Image Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #0a0b0e;
+            --accent-color: #00ffd5;
+            --bg-color: #0d1117;
+            --card-bg: #161b22;
+            --text-color: #e6e6e9;
+            --gradient-1: linear-gradient(45deg, #00ffd5, #00b8ff);
+            --gradient-2: linear-gradient(135deg, rgba(0, 255, 213, 0.1), rgba(0, 184, 255, 0.1));
+            --neon-shadow: 0 0 10px rgba(0, 255, 213, 0.3);
+        }
+
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #0a0b0e 0%, #1a1f25 100%);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 导航栏样式 - 与 index.html 保持一致 */
+        nav {
+            background: rgba(13, 17, 23, 0.95);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(0, 255, 213, 0.1);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1rem;
+        }
+
+        .logo {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 1.2rem;
+            letter-spacing: 0.5px;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: var(--neon-shadow);
+            white-space: nowrap;
+        }
+
+        .nav-center {
+            display: flex;
+            gap: 3rem;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .nav-link {
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            position: relative;
+            opacity: 0.8;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-link:hover {
+            color: var(--accent-color);
+            opacity: 1;
+            text-shadow: 0 0 8px rgba(0, 255, 213, 0.3);
+        }
+
+        .nav-link.active {
+            color: var(--accent-color);
+            font-weight: 600;
+            opacity: 1;
+        }
+
+        .login-btn {
+            background: var(--gradient-1);
+            color: #000;
+            padding: 0.6rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            box-shadow: 0 2px 10px rgba(0, 255, 213, 0.3);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 255, 213, 0.4);
+        }
+
+        .beta-tag {
+            background: var(--gradient-1);
+            color: #000;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            box-shadow: 0 2px 10px rgba(0, 255, 213, 0.3);
+        }
+
+        /* 主要内容区域 */
+        .main-container {
+            max-width: 1200px;
+            margin: 100px auto 0;
+            padding: 2rem;
+            flex: 1;
+        }
+
+        /* 价格标题部分 */
+        .pricing-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .pricing-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: var(--neon-shadow);
+        }
+
+        .pricing-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* 价格卡片网格 */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        /* 价格卡片样式 */
+        .price-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2.5rem;
+            border: 1px solid rgba(0, 255, 213, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .price-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-1);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .price-card:hover::before {
+            opacity: 1;
+        }
+
+        .price-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .popular {
+            border: 2px solid var(--accent-color);
+            transform: scale(1.05);
+        }
+
+        .popular:hover {
+            transform: scale(1.05) translateY(-10px);
+        }
+
+        .popular-tag {
+            position: absolute;
+            top: 20px;
+            right: -35px;
+            background: var(--gradient-1);
+            color: #000;
+            padding: 8px 40px;
+            transform: rotate(45deg);
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .plan-name {
+            font-size: 1.5rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .plan-price {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin: 1.5rem 0;
+            color: white;
+        }
+
+        .plan-price small {
+            font-size: 1rem;
+            opacity: 0.7;
+        }
+
+        .plan-features {
+            list-style: none;
+            padding: 0;
+            margin: 2rem 0;
+        }
+
+        .plan-features li {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .plan-features li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--accent-color);
+        }
+
+        .plan-button {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 8px;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .price-card:not(.popular) .plan-button {
+            background: transparent;
+            border: 2px solid var(--accent-color);
+            color: var(--accent-color);
+        }
+
+        .price-card:not(.popular) .plan-button:hover {
+            background: var(--accent-color);
+            color: black;
+        }
+
+        .popular .plan-button {
+            background: var(--gradient-1);
+            color: black;
+            box-shadow: 0 4px 15px rgba(0, 255, 213, 0.3);
+        }
+
+        .popular .plan-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 255, 213, 0.4);
+        }
+
+        /* 企业定制部分 */
+        .enterprise-section {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 3rem;
+            text-align: center;
+            border: 1px solid rgba(0, 255, 213, 0.1);
+            margin-top: 2rem;
+        }
+
+        .enterprise-title {
+            font-size: 2rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .enterprise-description {
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .contact-button {
+            background: var(--gradient-1);
+            color: black;
+            border: none;
+            padding: 1rem 3rem;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .contact-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 255, 213, 0.4);
+        }
+
+        /* 页脚样式 */
+        footer {
+            background: linear-gradient(180deg, var(--primary-color), rgba(10, 11, 14, 0.98));
+            padding: 2rem;
+            margin-top: 2rem;
+            text-align: center;
+            border-top: 1px solid rgba(0, 255, 213, 0.1);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 1024px) {
+            .pricing-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .price-card {
+                transform: none !important;
+            }
+
+            .popular {
+                transform: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <div class="logo">AI Image Generator</div>
+            <div class="nav-center">
+                <a href="index.html" class="nav-link">
+                    <i class="fas fa-home"></i>Home
+                </a>
+                <a href="pricing.html" class="nav-link active">
+                    <i class="fas fa-tag"></i>Pricing
+                </a>
+            </div>
+            <div class="nav-right">
+                <button class="login-btn">Login</button>
+                <span class="beta-tag">Beta</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <div class="pricing-header">
+            <h1 class="pricing-title">Choose Your Plan</h1>
+            <p class="pricing-subtitle">Flexible pricing options to meet your creative needs</p>
+        </div>
+
+        <div class="pricing-grid">
+            <div class="price-card">
+                <div class="plan-name">Basic</div>
+                <div class="plan-price">
+                    $9<small>/month</small>
+                </div>
+                <ul class="plan-features">
+                    <li>20 images per day</li>
+                    <li>Standard generation speed</li>
+                    <li>Basic resolution</li>
+                    <li>Community support</li>
+                    <li>Basic prompt tools</li>
+                </ul>
+                <button class="plan-button">Get Started</button>
+            </div>
+
+            <div class="price-card popular">
+                <div class="popular-tag">Most Popular</div>
+                <div class="plan-name">Pro</div>
+                <div class="plan-price">
+                    $29<small>/month</small>
+                </div>
+                <ul class="plan-features">
+                    <li>100 images per day</li>
+                    <li>Priority generation</li>
+                    <li>HD resolution</li>
+                    <li>Priority support</li>
+                    <li>Advanced prompt tools</li>
+                    <li>Commercial license</li>
+                    <li>Batch generation</li>
+                </ul>
+                <button class="plan-button">Get Started</button>
+            </div>
+
+            <div class="price-card">
+                <div class="plan-name">Business</div>
+                <div class="plan-price">
+                    $99<small>/month</small>
+                </div>
+                <ul class="plan-features">
+                    <li>Unlimited images</li>
+                    <li>Fastest generation</li>
+                    <li>4K resolution</li>
+                    <li>24/7 dedicated support</li>
+                    <li>All premium features</li>
+                    <li>API access</li>
+                    <li>Custom integration</li>
+                </ul>
+                <button class="plan-button">Get Started</button>
+            </div>
+        </div>
+
+        <div class="enterprise-section">
+            <h2 class="enterprise-title">Need a Custom Solution?</h2>
+            <p class="enterprise-description">
+                Looking for larger scale solutions? We offer enterprise-grade services including dedicated API access, 
+                private deployment, and team management features.
+            </p>
+            <button class="contact-button">Contact Sales</button>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p>© 2024 AI Image Generator | Powered by Advanced AI Models</p>
+        </div>
+    </footer>
+</body>
+</html> 
